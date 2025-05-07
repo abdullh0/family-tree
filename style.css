@@ -1,0 +1,37 @@
+
+body {
+  font-family: 'Tahoma', sans-serif;
+  direction: rtl;
+  background-color: #f9f9f9;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+}
+
+.tree {
+  list-style-type: none;
+}
+
+.tree li {
+  margin: 5px 0;
+  position: relative;
+  padding-right: 20px;
+}
+
+.tree span {
+  cursor: pointer;
+  background-color: #e1eaff;
+  padding: 4px 10px;
+  border-radius: 5px;
+  display: inline-block;
+}
+
+.tree ul {
+  display: none;
+  margin-right: 20px;
+  border-right: 1px solid #ccc;
+  padding-right: 10px;
+}
