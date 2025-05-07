@@ -1,0 +1,97 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>إدارة شجرة العائلة</title>
+  <style>
+    body { font-family: Tahoma; direction: rtl; background: #f0f0f0; padding: 20px; }
+    h1 { text-align: center; }
+    ul { list-style-type: none; }
+    li { margin: 5px 0; }
+    button { margin-right: 5px; margin-top: 5px; }
+    input { margin: 5px; }
+    .node { margin: 5px 0; background: #e1eaff; padding: 4px 8px; border-radius: 4px; display: inline-block; }
+  </style>
+</head>
+<body>
+  <h1>إدارة شجرة العائلة</h1>
+  <div id="tree-container"></div>
+  <div style="text-align:center; margin-top:20px;">
+    <button onclick="downloadJSON()">💾 تحميل التعديلات</button>
+  </div>
+  <script>
+    let family = {};
+
+    async function fetchData() {
+      const response = await fetch('family.json');
+      family = await response.json();
+      renderTree(family, document.getElementById('tree-container'));
+    }
+
+    function renderTree(node, container) {
+      container.innerHTML = '';
+      const ul = document.createElement('ul');
+      buildNode(node, ul);
+      container.appendChild(ul);
+    }
+
+    function buildNode(node, parentUl) {
+      const li = document.createElement('li');
+      const span = document.createElement('span');
+      span.className = 'node';
+      span.textContent = node.name;
+
+      const deleteBtn = document.createElement('button');
+      deleteBtn.textContent = '❌ حذف';
+      deleteBtn.onclick = () => {
+        if (confirm('هل أنت متأكد من الحذف؟')) {
+          const index = parentUl.parentNode.node.children.indexOf(node);
+          if (index !== -1) parentUl.parentNode.node.children.splice(index, 1);
+          renderTree(family, document.getElementById('tree-container'));
+        }
+      };
+
+      const addBtn = document.createElement('button');
+      addBtn.textContent = '➕ إضافة ابن';
+      addBtn.onclick = () => {
+        const childName = prompt('اسم الابن الجديد:');
+        if (childName) {
+          if (!node.children) node.children = [];
+          const newChild = { name: childName, children: [] };
+          node.children.push(newChild);
+          renderTree(family, document.getElementById('tree-container'));
+        }
+      };
+
+      li.appendChild(span);
+      li.appendChild(addBtn);
+      li.appendChild(deleteBtn);
+
+      if (node.children && node.children.length > 0) {
+        const ul = document.createElement('ul');
+        node.children.forEach(child => {
+          child.parent = node;
+          buildNode(child, ul);
+        });
+        li.appendChild(ul);
+      }
+
+      li.node = node;
+      parentUl.appendChild(li);
+    }
+
+    function downloadJSON() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(family, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", "family.json");
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+    }
+
+    window.onload = fetchData;
+  </script>
+</body>
+</html>

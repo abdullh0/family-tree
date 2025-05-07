@@ -1,0 +1,22 @@
+{
+  "name": "محمد",
+  "children": [
+    {
+      "name": "عبدالله",
+      "children": [
+        {
+          "name": "سعود",
+          "children": []
+        },
+        {
+          "name": "بدر",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "أحمد",
+      "children": []
+    }
+  ]
+}
